@@ -1,0 +1,44 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: '#F9FAFB';
+}
+
+.tabler-icon {
+  stroke-width: 1.5;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Mengubah lebar scrollbar */
+.scroll-area::-webkit-scrollbar {
+  width: 1px; /* Lebar scrollbar vertikal */
+  height: 2px; /* Lebar scrollbar horizontal */
+}
+
+/* Mengubah gaya track (bagian di belakang scrollbar) */
+.scroll-area::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Mengubah gaya thumb (bagian yang bisa digeser) */
+.scroll-area::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+/* Mengubah gaya thumb ketika sedang di-hover */
+.scroll-area::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Ini untuk internal class Leaflet */
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+.leaflet-control-container {
+  display: none !important;
+}

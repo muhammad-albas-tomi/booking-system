@@ -1,0 +1,40 @@
+.table {
+  border-radius: var(--mantine-radius-default);
+  overflow: hidden;
+
+  th,
+  td {
+    padding: 0 1rem;
+  }
+
+  th {
+    font-weight: 500;
+    background-color: hsl(210 40% 96.1% / 0.5);
+    height: 3rem;
+  }
+
+  tbody {
+    font-size: 14px;
+    font-weight: 500;
+
+    tr {
+      height: 2.75rem;
+
+      &:nth-child(even) {
+        background-color: #f9fafb;
+      }
+    }
+  }
+}
+
+.buttonGroup {
+  & > button:last-child {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+
+  & > *:not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}

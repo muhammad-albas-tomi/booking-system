@@ -1,0 +1,29 @@
+.list {
+  position: relative;
+  height: 2.5rem;
+  padding: 0.25rem;
+  display: flex;
+  background-color: hsl(210 40% 96.1%);
+  border-radius: 8px;
+}
+
+.indicator {
+  background-color: var(--mantine-color-white);
+  border-radius: 4px;
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.tab {
+  flex: 1;
+  max-height: 32px;
+  z-index: 1;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.25rem;
+  transition: color 100ms ease;
+  color: var(--mantine-color-gray-7);
+
+  &[data-active] {
+    color: var(--mantine-color-black);
+  }
+}

@@ -1,0 +1,44 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Preparation') {
+      steps {
+        sh "node -v"
+      }
+    }
+    
+    stage('Pull from Git') {
+      steps {
+        dir("${env.PROJECT_DIR}") {
+          sh "sudo -u www git pull origin staging"
+          sh "sudo -u www git switch staging"
+        }
+      }
+    }
+
+    stage('Install Dependencies') {
+      steps {
+        dir("${env.PROJECT_DIR}") {
+          sh "pnpm install"
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        dir("${env.PROJECT_DIR}") {
+          sh "pnpm build"
+        }
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        dir("${env.PROJECT_DIR}") {
+          sh "pm2 restart ecosystem.config.js"
+        }
+      }
+    }
+  }
+}

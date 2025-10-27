@@ -1,0 +1,39 @@
+.list {
+  position: relative;
+  margin-bottom: var(--mantine-spacing-md);
+  height: 48px;
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  padding: 0 4px;
+  border-radius: 6px;
+}
+
+.indicator {
+  background-color: #dcfce7;
+  border-radius: 4px;
+  border: 1px solid var(--mantine-color-gray-2);
+}
+
+.tab {
+  z-index: 1;
+  font-weight: 550;
+  transition: color 100ms ease;
+  color: #64748b;
+  font-size: 0.875rem;
+  height: 38px;
+
+  &[data-active] {
+    color: #16a34a;
+  }
+
+  @mixin dark {
+    color: var(--mantine-color-dark-1);
+
+    &[data-active] {
+      color: var(--mantine-color-white);
+    }
+  }
+}

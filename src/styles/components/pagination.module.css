@@ -1,0 +1,11 @@
+.control {
+  &[data-active='true'] {
+    background-color: #f0fdf4;
+    border-color: #88d3c4;
+    color: #379582;
+
+    &:hover {
+      background-color: darken(#f0fdf4, 3%);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+.tab {
+  color: '#6b7280';
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  &[aria-selected='true'] {
+    color: #16a34a;
+    font-weight: 550;
+  }
+}
+
+.list {
+  &::before {
+    border-width: 0.5px !important;
+    border-color: #e5e7eb;
+  }
+}
