@@ -7,7 +7,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { DateInput, DatePickerInput } from '@mantine/dates';
 
 import classes from '~/styles/components/text-input.module.css';
 
@@ -53,6 +53,17 @@ export const themeTextInput = createTheme({
     }),
 
     DateInput: DateInput.extend({
+      defaultProps: {
+        size: 'md',
+        classNames: classes,
+      },
+      styles: {
+        input: {
+          outline: 'none',
+        },
+      },
+    }),
+    DatePickerInput: DatePickerInput.extend({
       defaultProps: {
         size: 'md',
         classNames: classes,
