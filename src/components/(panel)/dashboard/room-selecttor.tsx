@@ -2,16 +2,29 @@
 
 import {
   ActionIcon,
+  Badge,
   Button,
   Divider,
+  Flex,
   Group,
   Popover,
   Stack,
   Text,
 } from '@mantine/core';
-import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
+import {
+  IconMinus,
+  IconPlus,
+  IconTrash,
+  IconUser,
+  IconUsers,
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import { useSearchQuery } from '~/stores/search';
+
+const MAX_ROOMS = 5;
+const MAX_ADULTS = 8;
+const MAX_CHILDREN = 4;
+const MIN_ADULTS = 1;
 
 export default function RoomGuestSelector() {
   const [opened, setOpened] = useState(false);
@@ -22,15 +35,19 @@ export default function RoomGuestSelector() {
   const totalGuests = rooms.reduce((sum, r) => sum + r.adults + r.children, 0);
 
   const addRoom = () => {
-    setSearchData({
-      rooms: [...rooms, { adults: 1, children: 0 }],
-    });
+    if (rooms.length < MAX_ROOMS) {
+      setSearchData({
+        rooms: [...rooms, { adults: 1, children: 0 }],
+      });
+    }
   };
 
   const removeRoom = (index: number) => {
-    setSearchData({
-      rooms: rooms.filter((_, i) => i !== index),
-    });
+    if (rooms.length > 1) {
+      setSearchData({
+        rooms: rooms.filter((_, i) => i !== index),
+      });
+    }
   };
 
   const updateCount = (
@@ -42,7 +59,13 @@ export default function RoomGuestSelector() {
       i === index
         ? {
             ...room,
-            [field]: Math.max(field === 'adults' ? 1 : 0, room[field] + delta),
+            [field]: Math.max(
+              field === 'adults' ? MIN_ADULTS : 0,
+              Math.min(
+                field === 'adults' ? MAX_ADULTS : MAX_CHILDREN,
+                room[field] + delta,
+              ),
+            ),
           }
         : room,
     );
@@ -53,115 +76,203 @@ export default function RoomGuestSelector() {
     <Popover
       opened={opened}
       onChange={setOpened}
-      width={350}
+      width={380}
       position="bottom"
       withArrow
-      shadow="lg"
+      shadow="xl"
       radius="md"
+      offset={10}
     >
       <Popover.Target>
         <Button
-          variant="transparent"
+          variant="light"
           w="100%"
           onClick={() => setOpened((o) => !o)}
-          leftSection="🛏️"
-          rightSection={
-            <Text size="sm" c="dimmed">
-              {totalGuests} tamu
-            </Text>
-          }
+          p="sm"
           justify="space-between"
+          h="48px"
+          style={{
+            textAlign: 'left',
+            backgroundColor: opened ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+            border: opened
+              ? '1px solid rgb(59, 130, 246)'
+              : '1px solid #e5e7eb',
+          }}
+          leftSection={
+            <Group gap={6}>
+              <IconUsers size={16} />
+              <Text fw={500} size="sm">
+                {totalRooms} Kamar
+              </Text>
+            </Group>
+          }
         >
-          <Text size="md">{totalRooms} Kamar</Text>
+          <Text fz="sm" c="dimmed" truncate>
+            {totalGuests} Tamu
+          </Text>
         </Button>
       </Popover.Target>
 
-      <Popover.Dropdown>
-        <Stack gap="md">
-          {rooms.map((room, index) => (
-            <Stack key={index} gap="sm">
-              <Group justify="space-between" align="center">
-                <Text fw={600} size="md">
-                  Kamar {index + 1}
-                </Text>
-                {rooms.length > 1 && (
-                  <ActionIcon
-                    variant="subtle"
-                    color="red"
-                    size="sm"
-                    onClick={() => removeRoom(index)}
-                  >
-                    <IconTrash size={14} />
-                  </ActionIcon>
-                )}
-              </Group>
+      <Popover.Dropdown p="md">
+        <Stack gap="lg">
+          <Group justify="space-between" align="center">
+            <Text fw={600} size="lg" c="dark.9">
+              Detail Tamu
+            </Text>
+            <Badge variant="light" color="blue" size="sm">
+              {totalGuests} Total
+            </Badge>
+          </Group>
 
-              <Group justify="space-between" align="center">
-                <Text size="sm">Dewasa</Text>
-                <Group gap={8}>
-                  <ActionIcon
-                    variant="light"
-                    size="sm"
-                    disabled={room.adults <= 1}
-                    onClick={() => updateCount(index, 'adults', -1)}
-                  >
-                    <IconMinus size={12} />
-                  </ActionIcon>
-                  <Text size="sm" w={24} ta="center" fw={500}>
-                    {room.adults}
-                  </Text>
-                  <ActionIcon
-                    variant="light"
-                    size="sm"
-                    disabled={room.adults >= 8}
-                    onClick={() => updateCount(index, 'adults', 1)}
-                  >
-                    <IconPlus size={12} />
-                  </ActionIcon>
+          <Stack gap="md" mb="sm">
+            {rooms.map((room, index) => (
+              <Stack
+                key={index}
+                gap="sm"
+                p="sm"
+                style={{
+                  backgroundColor: 'rgba(248, 250, 252, 0.8)',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                }}
+              >
+                <Group justify="space-between" align="center">
+                  <Group gap="xs">
+                    <Text fw={600} size="md" c="dark.9">
+                      Kamar {index + 1}
+                    </Text>
+                    <Badge variant="light" size="xs" color="gray">
+                      {room.adults + room.children} Tamu
+                    </Badge>
+                  </Group>
+                  {rooms.length > 1 && (
+                    <ActionIcon
+                      variant="subtle"
+                      color="red"
+                      size="sm"
+                      onClick={() => removeRoom(index)}
+                      title="Hapus kamar"
+                    >
+                      <IconTrash size={14} />
+                    </ActionIcon>
+                  )}
                 </Group>
-              </Group>
 
-              <Group justify="space-between" align="center">
-                <Text size="sm">Anak-anak</Text>
-                <Group gap={8}>
-                  <ActionIcon
-                    variant="light"
-                    size="sm"
-                    disabled={room.children <= 0}
-                    onClick={() => updateCount(index, 'children', -1)}
-                  >
-                    <IconMinus size={12} />
-                  </ActionIcon>
-                  <Text size="sm" w={24} ta="center" fw={500}>
-                    {room.children}
-                  </Text>
-                  <ActionIcon
-                    variant="light"
-                    size="sm"
-                    disabled={room.children >= 4}
-                    onClick={() => updateCount(index, 'children', 1)}
-                  >
-                    <IconPlus size={12} />
-                  </ActionIcon>
-                </Group>
-              </Group>
+                <Flex direction="column" gap="sm">
+                  <Group justify="space-between" align="center">
+                    <Group gap="xs">
+                      <IconUser size={14} color="#6b7280" />
+                      <Text size="sm" fw={500}>
+                        Dewasa
+                      </Text>
+                    </Group>
+                    <Group gap={6}>
+                      <ActionIcon
+                        variant="light"
+                        size="sm"
+                        disabled={room.adults <= MIN_ADULTS}
+                        onClick={() => updateCount(index, 'adults', -1)}
+                        color="blue"
+                      >
+                        <IconMinus size={12} />
+                      </ActionIcon>
+                      <Text
+                        size="sm"
+                        w={28}
+                        ta="center"
+                        fw={600}
+                        c="dark.9"
+                        style={{
+                          backgroundColor: '#f3f4f6',
+                          borderRadius: '4px',
+                          padding: '2px 0',
+                        }}
+                      >
+                        {room.adults}
+                      </Text>
+                      <ActionIcon
+                        variant="light"
+                        size="sm"
+                        disabled={room.adults >= MAX_ADULTS}
+                        onClick={() => updateCount(index, 'adults', 1)}
+                        color="blue"
+                      >
+                        <IconPlus size={12} />
+                      </ActionIcon>
+                    </Group>
+                  </Group>
 
-              {index !== rooms.length - 1 && <Divider />}
-            </Stack>
-          ))}
+                  <Group justify="space-between" align="center">
+                    <Group gap="xs">
+                      <IconUsers size={14} color="#6b7280" />
+                      <Text size="sm" fw={500}>
+                        Anak-anak
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        (2-11 tahun)
+                      </Text>
+                    </Group>
+                    <Group gap={6}>
+                      <ActionIcon
+                        variant="light"
+                        size="sm"
+                        disabled={room.children <= 0}
+                        onClick={() => updateCount(index, 'children', -1)}
+                        color="blue"
+                      >
+                        <IconMinus size={12} />
+                      </ActionIcon>
+                      <Text
+                        size="sm"
+                        w={28}
+                        ta="center"
+                        fw={600}
+                        c="dark.9"
+                        style={{
+                          backgroundColor: '#f3f4f6',
+                          borderRadius: '4px',
+                          padding: '2px 0',
+                        }}
+                      >
+                        {room.children}
+                      </Text>
+                      <ActionIcon
+                        variant="light"
+                        size="sm"
+                        disabled={room.children >= MAX_CHILDREN}
+                        onClick={() => updateCount(index, 'children', 1)}
+                        color="blue"
+                      >
+                        <IconPlus size={12} />
+                      </ActionIcon>
+                    </Group>
+                  </Group>
+                </Flex>
+
+                {index !== rooms.length - 1 && <Divider variant="dashed" />}
+              </Stack>
+            ))}
+          </Stack>
+
+          {rooms.length < MAX_ROOMS && (
+            <Button
+              variant="light"
+              color="blue"
+              onClick={addRoom}
+              fullWidth
+              leftSection={<IconPlus size={14} />}
+              size="sm"
+            >
+              Tambah Kamar
+            </Button>
+          )}
 
           <Button
-            variant="light"
-            color="blue"
-            onClick={addRoom}
+            onClick={() => setOpened(false)}
             fullWidth
-            leftSection={<IconPlus size={14} />}
-            disabled={rooms.length >= 5}
+            color="blue"
+            size="sm"
           >
-            Tambah Kamar
-          </Button>
-
-          <Button onClick={() => setOpened(false)} fullWidth color="blue">
             Terapkan
           </Button>
         </Stack>

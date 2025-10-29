@@ -24,18 +24,20 @@ const initialSearchData: SearchData = {
   accommodationType: '',
   checkIn: null,
   checkOut: null,
-  rooms: [{ adults: 2, children: 0 }],
+  rooms: [{ adults: 1, children: 0 }],
 };
 
 export const useSearchQuery = create<SearchType>((set) => ({
   query: '',
   searchData: initialSearchData,
   setQuery: (query) => set({ query }),
-  setSearchData: (data) => set((state) => ({
-    searchData: { ...state.searchData, ...data }
-  })),
-  clearSearch: () => set({
-    query: '',
-    searchData: initialSearchData
-  }),
+  setSearchData: (data) =>
+    set((state) => ({
+      searchData: { ...state.searchData, ...data },
+    })),
+  clearSearch: () =>
+    set({
+      query: '',
+      searchData: initialSearchData,
+    }),
 }));
