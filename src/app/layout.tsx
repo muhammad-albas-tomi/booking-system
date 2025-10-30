@@ -3,9 +3,10 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '~/styles/globals.css';
 
-import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import '@mantine/dates/styles.css';
-import { Providers } from '~/components/providers';
+import { Notifications } from '@mantine/notifications';
+import { SessionProviderWrapper } from '~/components/providers/session-provider';
 
 export { metadata } from '~/configs/site';
 
@@ -25,7 +26,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <SessionProviderWrapper>
+          <MantineProvider>
+            <Notifications />
+            {children}
+          </MantineProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );
