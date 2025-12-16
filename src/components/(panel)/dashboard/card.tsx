@@ -22,6 +22,12 @@ import {
   IconStar,
   IconUsers,
   IconWifi,
+  IconTools,
+  IconPool,
+  IconWeight,
+  IconWind,
+  IconChefHat,
+  IconCandle,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -39,9 +45,11 @@ const roomData = [
     beds: 1,
     image:
       'https://www.theanvayabali.com/wp-content/uploads/2023/01/1440x768-1.jpg',
-    amenities: ['WiFi', 'Parking', 'Breakfast'],
+    amenities: ['WiFi', 'Parking', 'Breakfast', 'AC'],
     available: true,
     discount: 17,
+    size: '35 m²',
+    highlights: ['Ocean View', 'Free Breakfast'],
   },
   {
     id: 2,
@@ -56,9 +64,11 @@ const roomData = [
     beds: 2,
     image:
       'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png',
-    amenities: ['WiFi', 'Parking', 'Breakfast', 'Mini Bar'],
+    amenities: ['WiFi', 'Parking', 'Breakfast', 'Mini Bar', 'Living Room'],
     available: true,
     discount: 13,
+    size: '65 m²',
+    highlights: ['City View', 'Living Room', 'Mini Bar'],
   },
   {
     id: 3,
@@ -73,9 +83,68 @@ const roomData = [
     beds: 3,
     image:
       'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-3.png',
-    amenities: ['WiFi', 'Parking', 'Breakfast', 'Private Pool'],
-    available: false,
+    amenities: ['WiFi', 'Parking', 'Breakfast', 'Private Pool', 'Kitchen', 'Garden'],
+    available: true,
     discount: 10,
+    size: '120 m²',
+    highlights: ['Private Pool', 'Garden View', 'Full Kitchen'],
+  },
+  {
+    id: 4,
+    name: 'Cozy Studio Apartment',
+    type: 'Apartemen',
+    price: 750000,
+    originalPrice: 850000,
+    rating: 4.6,
+    reviews: 312,
+    location: 'Jakarta Selatan',
+    guests: 2,
+    beds: 1,
+    image:
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
+    amenities: ['WiFi', 'Gym', 'Pool', 'Kitchenette'],
+    available: true,
+    discount: 12,
+    size: '28 m²',
+    highlights: ['City Center', 'Gym Access', 'Modern Design'],
+  },
+  {
+    id: 5,
+    name: 'Luxury Beach Resort Suite',
+    type: 'Resort',
+    price: 5200000,
+    originalPrice: 6000000,
+    rating: 5.0,
+    reviews: 98,
+    location: 'Nusa Dua, Bali',
+    guests: 4,
+    beds: 2,
+    image:
+      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop',
+    amenities: ['WiFi', 'Parking', 'Breakfast', 'Spa', 'Beach Access', 'Butler Service'],
+    available: true,
+    discount: 13,
+    size: '95 m²',
+    highlights: ['Beachfront', 'Spa Access', 'Butler Service'],
+  },
+  {
+    id: 6,
+    name: 'Budget Friendly Guest House',
+    type: 'Guest House',
+    price: 450000,
+    originalPrice: null,
+    rating: 4.4,
+    reviews: 178,
+    location: 'Yogyakarta',
+    guests: 3,
+    beds: 2,
+    image:
+      'https://images.unsplash.com/photo-1615873968403-62e3d082f31d?w=800&h=600&fit=crop',
+    amenities: ['WiFi', 'Parking', 'Shared Kitchen'],
+    available: true,
+    discount: 0,
+    size: '22 m²',
+    highlights: ['Budget Friendly', 'Near Malioboro', 'Local Experience'],
   },
 ];
 
@@ -83,6 +152,19 @@ const amenityIcons: { [key: string]: React.ReactNode } = {
   WiFi: <IconWifi size={14} />,
   Parking: <IconCar size={14} />,
   Breakfast: <IconCoffee size={14} />,
+  AC: <IconWind size={14} />,
+  'Mini Bar': <IconCoffee size={14} />,
+  'Living Room': <IconBed size={14} />,
+  'Private Pool': <IconPool size={14} />,
+  Kitchen: <IconTools size={14} />,
+  Garden: <IconBed size={14} />,
+  Kitchenette: <IconTools size={14} />,
+  Gym: <IconWeight size={14} />,
+  Pool: <IconPool size={14} />,
+  Spa: <IconCandle size={14} />,
+  'Beach Access': <IconPool size={14} />,
+  'Butler Service': <IconChefHat size={14} />,
+  'Shared Kitchen': <IconTools size={14} />,
 };
 
 interface RoomCardProps {
@@ -192,7 +274,19 @@ function RoomCard({ room }: RoomCardProps) {
                 <Badge size="xs" variant="light" color="blue">
                   {room.type}
                 </Badge>
+                <Badge size="xs" variant="outline" color="gray">
+                  {room.size}
+                </Badge>
               </Group>
+              {room.highlights && room.highlights.length > 0 && (
+                <Group gap={6}>
+                  {room.highlights.slice(0, 2).map((highlight) => (
+                    <Badge key={highlight} size="xs" variant="dot" color="green">
+                      {highlight}
+                    </Badge>
+                  ))}
+                </Group>
+              )}
             </Stack>
 
             <Tooltip label="More options">
@@ -289,5 +383,16 @@ function RoomCard({ room }: RoomCardProps) {
 }
 
 export function CardList({ roomIndex = 0 }: { roomIndex?: number }) {
-  return <RoomCard room={roomData[roomIndex % roomData.length]} />;
+  // Return different cards based on roomIndex to show more variety
+  const indices = [
+    0, // Deluxe Ocean View Room
+    1, // Premium Suite
+    2, // Family Garden Villa
+    3, // Cozy Studio Apartment
+    4, // Luxury Beach Resort
+    5, // Budget Friendly Guest House
+  ];
+
+  const indexToDisplay = indices[roomIndex % indices.length];
+  return <RoomCard room={roomData[indexToDisplay]} />;
 }

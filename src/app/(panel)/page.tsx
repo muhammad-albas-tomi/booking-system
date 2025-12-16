@@ -1,18 +1,26 @@
-import { Container } from '@mantine/core';
+import { Container, Stack } from '@mantine/core';
 import { Metadata } from 'next';
 import { Content } from '~/components/(panel)/dashboard/content';
+import { FeaturesSection } from '~/components/(panel)/dashboard/features-section';
+import { Footer } from '~/components/(panel)/dashboard/footer';
 import { DashboardHeader } from '~/components/(panel)/dashboard/header';
+import { TestimonialsSection } from '~/components/(panel)/dashboard/testimonials-section';
 
 export const metadata: Metadata = {
   title: 'Dashboard - StayEsea',
-  description: 'Find andbook hotels, homes, and much more on StayEsea.',
+  description: 'Find and book hotels, homes, and much more on StayEsea.',
 };
 
 export default function Page() {
   return (
-    <Container fluid px={0} mih={'30vh'} miw={'100vh'}>
+    <Stack gap={0}>
       <DashboardHeader />
-      <Content />
-    </Container>
+      <Container fluid px={0} miw={'100%'}>
+        <Content />
+      </Container>
+      <FeaturesSection />
+      <TestimonialsSection />
+      <Footer />
+    </Stack>
   );
 }

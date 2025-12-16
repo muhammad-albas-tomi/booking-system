@@ -77,7 +77,7 @@ export const DashboardHeader = () => {
           backgroundPosition: 'center',
         }}
         src="/images/header.jpg"
-        h={isMobile ? '600px' : '500px'}
+        h={isMobile ? '500px' : '450px'}
         w={'100%'}
       >
         <Overlay
