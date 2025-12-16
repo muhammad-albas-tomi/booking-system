@@ -3,6 +3,7 @@ import { ROLES } from './constants/roles';
 import { auth } from './utils/auth';
 
 const protectRoute = ['/hotels', '/bookings', '/admin', '/my-reservations'];
+const publicRoutes = ['/', '/login'];
 
 export async function middleware(req: NextRequest) {
   const session = await auth();
@@ -10,18 +11,33 @@ export async function middleware(req: NextRequest) {
   const role = session?.user?.role;
   const { pathname } = req.nextUrl;
 
-  if (!isLoggedIn && protectRoute.includes(pathname)) {
+  // Redirect logged-in users away from login page
+  if (isLoggedIn && pathname === '/login') {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
+  // Check if user is not logged in and trying to access protected routes
+  if (!isLoggedIn && !publicRoutes.includes(pathname)) {
+    // Allow access to room detail pages (assuming pattern like /room/[id] or /hotel/[id])
+    const isRoomDetail = pathname.match(/^\/(room|hotel)\/\w+/);
+
+    if (!isRoomDetail) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
+
+  // Existing protection logic for specific routes
+  if (!isLoggedIn && protectRoute.some((route) => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  if (isLoggedIn && protectRoute.includes(pathname)) {
-    if (role !== ROLES.ADMIN && pathname.startsWith('/admin')) {
+  // Admin route protection
+  if (isLoggedIn && pathname.startsWith('/admin')) {
+    if (role !== ROLES.ADMIN) {
       return NextResponse.redirect(new URL('/', req.url));
     }
   }
 
-  // Add logic to protect routes here if needed
-  // For now, just allow all requests
   return NextResponse.next();
 }
 
