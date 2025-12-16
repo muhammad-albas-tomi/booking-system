@@ -16,6 +16,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { poppins } from '~/configs/fonts';
 import { menu } from '~/configs/menu';
@@ -123,7 +124,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Group>
 
           <Group gap={16}>
-            <Button size="sm" variant="subtle">
+            <Button
+              onClick={() => signIn('google')}
+              autoContrast
+              size="sm"
+              variant="subtle"
+            >
               Masuk
             </Button>
             <Button size="sm">Daftar</Button>

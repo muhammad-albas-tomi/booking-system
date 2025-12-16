@@ -1,5 +1,4 @@
-import { NextAuthConfig } from 'next-auth';
-import 'next-auth/jwt';
+import type { NextAuthConfig } from 'next-auth';
 import Google from 'next-auth/providers/google';
 
 export const authConfig = {
@@ -12,33 +11,23 @@ export const authConfig = {
 
   pages: {
     signIn: '/login',
+    error: '/auth/error',
   },
   session: {
     strategy: 'jwt',
   },
-
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/');
-      const isOnLogin = nextUrl.pathname === '/login';
-
-      if (isOnDashboard && !isLoggedIn) {
-        return false;
-      } else if (isOnLogin && isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl));
-      }
-      return true;
-    },
-    async jwt({ token, user, account }) {
-      if (account && user) {
-        token.accessToken = account.access_token;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
-    async session({ session, token }) {
-      if (token.sub) {
-        session.user.id = token.sub;
+    session: async ({ session, token }) => {
+      if (session.user && token) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

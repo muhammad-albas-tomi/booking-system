@@ -1,6 +1,8 @@
 export type RoleType = {
   id: number;
   name: string;
-  type: string;
-  description: string | null;
+  description?: string;
+  permissions?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };

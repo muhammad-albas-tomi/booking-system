@@ -7,9 +7,7 @@
     "build": "dotenv -e .env.production -- next build",
     "start": "dotenv -e .env.production -- next start",
     "lint": "next lint",
-    "format": "prettier --write .",
-    "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@adamscybot/react-leaflet-component-marker": "^2.0.3",
@@ -97,7 +95,6 @@
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "3.5.2",
-    "storybook": "^8.6.2",
     "typescript": "^5",
     "vitest": "^3.0.7"
   },

@@ -1,6 +1,4 @@
-import { decode } from 'jsonwebtoken';
-import { JwtPayload } from '~/types/jwt';
-
+import { decode, JwtPayload } from 'jsonwebtoken';
 export function decodeJWT(token: string) {
   return decode(token) as JwtPayload;
 }
