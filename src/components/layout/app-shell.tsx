@@ -20,12 +20,20 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { poppins } from '~/configs/fonts';
 import { menu } from '~/configs/menu';
+import { useAuth } from '~/hooks/auth';
 import { Footer } from './footer';
+import { UserMenu } from './user-menu';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   const pathname =
     typeof window !== 'undefined' ? window.location.pathname : '';
+  const session = useAuth()?.session;
+
+  const menusAdmin = menu.filter(
+    (menu) => menu.isProtected && menu.segment === 'admin',
+  );
+  const generalMenus = menu.filter((menu) => menu.segment !== 'admin');
 
   return (
     <AppShell$1
@@ -53,7 +61,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Group>
 
           <Group flex={1} justify="center" fw={400} fz={14} visibleFrom="lg">
-            {menu.map((menu, key) => {
+            {(session?.user?.role === 'admin'
+              ? [...generalMenus, ...menusAdmin]
+              : generalMenus
+            ).map((menu, key) => {
               const isActive = pathname.startsWith(`/${menu.segment}`);
               if ('href' in menu) {
                 return (
@@ -94,8 +105,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         />
                       }
                       variant="subtle"
-                      bg={isActive ? '##33aded' : undefined}
-                      c={isActive ? '##33aded' : '#4b5563'}
+                      bg={isActive ? '#33aded' : undefined}
+                      c={isActive ? '#33aded' : '#4b5563'}
                       color="gray.5"
                       fz={14}
                       fw={500}
@@ -124,63 +135,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Group>
 
           <Group gap={16}>
-            <Button
-              onClick={() => signIn('google')}
-              autoContrast
-              size="sm"
-              variant="subtle"
-            >
-              Masuk
-            </Button>
-            <Button size="sm">Daftar</Button>
-            {/* <Menu trigger="click-hover" width={200} withArrow shadow="md">
-              <MenuTarget>
-                <Avatar
-                  c="#166534"
-                  variant="light"
-                  bg="#dcfce9"
-                  styles={{
-                    root: {
-                      cursor: 'pointer',
-                    },
-                    placeholder: {
-                      fontFamily: poppins.style.fontFamily,
-                      fontWeight: 500,
-                    },
-                  }}
-                  name={profile?.fullName || profile?.email || 'User'}
-                />
-              </MenuTarget>
-
-              <MenuDropdown>
-                <Box px="sm" py="xs">
-                  <Text fw={600} lineClamp={1}>
-                    {profile?.fullName}
-                  </Text>
-                  <Text fz="sm" fw={400} c="gray.7" lineClamp={1}>
-                    {profile?.email}
-                  </Text>
-                </Box>
-
-                <Divider my={4} />
-
-                <MenuItem
-                  leftSection={<IconUser />}
-                  component={Link}
-                  href={'/'}
+            {session ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Button
+                  onClick={() => signIn('google')}
+                  autoContrast
+                  size="sm"
+                  variant="subtle"
                 >
-                  Profil Saya
-                </MenuItem>
-
-                <MenuItem
-                  onClick={() => open()}
-                  color="red"
-                  leftSection={<IconLogout2 />}
-                >
-                  Keluar
-                </MenuItem>
-              </MenuDropdown>
-            </Menu> */}
+                  Masuk
+                </Button>
+                <Button size="sm">Daftar</Button>
+              </>
+            )}
           </Group>
         </Group>
       </AppShell$1.Header>

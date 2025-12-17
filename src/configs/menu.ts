@@ -5,6 +5,7 @@ import {
   IconCircleDashedPercentage,
   IconLayoutDashboard,
   IconProps,
+  IconUserCheck,
 } from '@tabler/icons-react';
 
 type Menu =
@@ -16,6 +17,7 @@ type Menu =
       href: string;
       segment: string | null;
       permissions?: string[];
+      isProtected?: boolean;
     }
   | {
       label: string;
@@ -24,9 +26,11 @@ type Menu =
         | React.ComponentType<React.SVGProps<SVGSVGElement>>;
       segment: string | null;
       permissions?: string[];
+      isProtected?: boolean;
       children: {
         label: string;
         href: string;
+        isProtected?: boolean;
         permissions?: string[];
       }[];
     };
@@ -44,6 +48,7 @@ export const menu: Menu[] = [
     icon: IconBedFilled,
     segment: 'hris',
     href: '/hris/book-now',
+    isProtected: true,
   },
 
   {
@@ -58,5 +63,12 @@ export const menu: Menu[] = [
     icon: IconAddressBook,
     segment: 'settings',
     href: '/settings/profile',
+  },
+  {
+    label: 'Admin Dashboard',
+    icon: IconUserCheck,
+    href: '/admin',
+    segment: 'admin',
+    isProtected: true,
   },
 ];
